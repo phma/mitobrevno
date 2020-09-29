@@ -19,16 +19,34 @@
  * limitations under the License.
  */
 #include <fstream>
+#include <chrono>
+#include <thread>
+#include <map>
+#include <queue>
 #include "mitobrevno.h"
 using namespace std;
 using namespace mitobrevno;
+namespace cr=std::chrono;
 
 namespace mitobrevno
 {
   ofstream mbFile;
+  queue<MbEvent> buffer;
+  cr::steady_clock clk;
+  map<thread::id,int> threadNums;
 }
 
-MbBlock::MbBlock()
+void mitobrevno::logEvent(int eventType,int param0,int param1,int param2,int param3)
 {
-  start=end=0;
+  cr::time_point<cr::steady_clock> now=clk.now();
+  MbEvent event;
+  event.time=now.time_since_epoch().count();
+  if (!threadNums.count(this_thread::get_id()))
+    threadNums[this_thread::get_id()]=threadNums.size();
+  event.thread=threadNums[this_thread::get_id()];
+  event.param[0]=param0;
+  event.param[1]=param1;
+  event.param[2]=param2;
+  event.param[3]=param3;
+  buffer.push(event);
 }

@@ -20,7 +20,6 @@
  */
 #ifndef MITOBREVNO_H
 #define MITOBREVNO_H
-#include <vector>
 #include <string>
 #include <chrono>
 #include <climits>
@@ -38,16 +37,6 @@ namespace mitobrevno
   void logEvent(int eventType,int param0=INT_MIN,int param1=INT_MIN,int param2=INT_MIN,int param3=INT_MIN);
   void openLogFile(std::string fileName);
   void writeBufferedLog();
-  const int NEVENTS=1024;
 }
-
-class MbBlock
-{
-public:
-  MbBlock();
-private:
-  int start,end;
-  MbEvent events[mitobrevno::NEVENTS];
-};
 
 #endif
