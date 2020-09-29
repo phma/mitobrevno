@@ -1,6 +1,6 @@
 /******************************************************/
 /*                                                    */
-/* mitobrevno.h - event logging                       */
+/* mitobrevno.cpp - event logging                     */
 /*                                                    */
 /******************************************************/
 /* Copyright 2020 Pierre Abbat.
@@ -18,36 +18,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef MITOBREVNO_H
-#define MITOBREVNO_H
-#include <vector>
-#include <string>
-#include <chrono>
-#include <climits>
-
-struct MbEvent
-{
-  uint64_t time;
-  int thread;
-  int eventType;
-  int param[4];
-};
+#include <fstream>
+#include "mitobrevno.h"
+using namespace std;
+using namespace mitobrevno;
 
 namespace mitobrevno
 {
-  void logEvent(int eventType,int param0=INT_MIN,int param1=INT_MIN,int param2=INT_MIN,int param3=INT_MIN);
-  void openLogFile(std::string fileName);
-  void writeBufferedLog();
-  const int NEVENTS=1024;
+  ofstream mbFile;
 }
 
-class MbBlock
+MbBlock::MbBlock()
 {
-public:
-  MbBlock();
-private:
-  int start,end;
-  MbEvent events[mitobrevno::NEVENTS];
-};
-
-#endif
+  start=end=0;
+}

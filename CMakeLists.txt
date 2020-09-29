@@ -42,7 +42,7 @@ find_package(Threads)
 #qt5_add_translation(qm_files perfecttin_en.ts perfecttin_es.ts)
 # To update translations, run "lupdate *.cpp -ts *.ts" in the source directory.
 
-add_executable(mitobrevno main.cpp mainwindow.cpp ${lib_resources})
+add_executable(mitobrevno main.cpp mainwindow.cpp mitobrevno.cpp ${lib_resources})
 target_link_libraries(mitobrevno ${CMAKE_THREAD_LIBS_INIT} Qt5::Widgets Qt5::Core)
 
 include(CheckIncludeFiles)
