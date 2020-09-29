@@ -21,7 +21,9 @@
 #ifndef MITOBREVNO_H
 #define MITOBREVNO_H
 #include <vector>
+#include <string>
 #include <chrono>
+#include <climits>
 
 struct MbEvent
 {
@@ -33,4 +35,8 @@ struct MbEvent
 
 namespace mitobrevno
 {
+  void logEvent(int eventType,int param0=INT_MIN,int param1=INT_MIN,int param2=INT_MIN,int param3=INT_MIN);
+  void openLogFile(std::string fileName);
+  void writeBufferedLog();
 }
+#endif

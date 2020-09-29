@@ -20,6 +20,7 @@
  */
 #include "config.h"
 #include "mainwindow.h"
+#include "mitobrevno.h"
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
