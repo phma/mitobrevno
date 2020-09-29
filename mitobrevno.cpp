@@ -34,6 +34,23 @@ namespace mitobrevno
   queue<MbEvent> buffer;
   cr::steady_clock clk;
   map<thread::id,int> threadNums;
+  void writelong(ostream &file,uint64_t i);
+  void writeint(ostream &file,int i);
+  void write(ostream &file,const MbEvent &event);
+}
+
+void mitobrevno::writeint(ostream &file,int i)
+{
+  char buf[4];
+  *(int *)buf=i;
+  file.write(buf,4);
+}
+
+void mitobrevno::writelong(ostream &file,uint64_t i)
+{
+  char buf[8];
+  *(uint64_t *)buf=i;
+ file.write(buf,8);
 }
 
 void mitobrevno::logEvent(int eventType,int param0,int param1,int param2,int param3)
@@ -50,3 +67,29 @@ void mitobrevno::logEvent(int eventType,int param0,int param1,int param2,int par
   event.param[3]=param3;
   buffer.push(event);
 }
+
+void mitobrevno::openLogFile(string fileName)
+{
+  mbFile.open(fileName,ios::binary|ios::out|ios::trunc);
+}
+
+void mitobrevno::write(ostream &file,const MbEvent &event)
+{
+  int i;
+  writelong(file,event.time);
+  writeint(file,event.thread);
+  writeint(file,event.eventType);
+  for (i=0;i<4;i++)
+    writeint(file,event.param[i]);
+}
+
+void mitobrevno::writeBufferedLog()
+{
+  MbEvent event;
+  while (buffer.size())
+  {
+    write(mbFile,buffer.front());
+    buffer.pop();
+  }
+}
+
