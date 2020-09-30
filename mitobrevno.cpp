@@ -31,12 +31,14 @@ namespace cr=std::chrono;
 
 namespace mitobrevno
 {
+  bool headerClosed;
   ofstream mbFile;
   queue<MbEvent> buffer;
   cr::steady_clock clk;
   map<thread::id,int> threadNums;
   void writelong(ostream &file,uint64_t i);
   void writeint(ostream &file,int i);
+  void writeustring(ostream &file,string s);
   void write(ostream &file,const MbEvent &event);
   mutex mitoMutex;
 }
@@ -53,6 +55,13 @@ void mitobrevno::writelong(ostream &file,uint64_t i)
   char buf[8];
   *(uint64_t *)buf=i;
  file.write(buf,8);
+}
+
+void mitobrevno::writeustring(ostream &file,string s)
+// FIXME: if s contains a null character, it should be written as c0 a0
+{
+  file.write(s.data(),s.length());
+  file.put(0);
 }
 
 void mitobrevno::logEvent(int eventType,int param0,int param1,int param2,int param3)
@@ -77,6 +86,21 @@ void mitobrevno::openLogFile(string fileName)
   mbFile.open(fileName,ios::binary|ios::out|ios::trunc);
   writeint(mbFile,0x043103bc); // file signature: μб in UTF-16 (or бμ big-endian)
   writeint(mbFile,0); // format version number
+  headerClosed=false;
+}
+
+void mitobrevno::describeEvent(int eventType,std::string description)
+{
+  mbFile.put(1);
+  writeint(mbFile,eventType);
+  writeustring(mbFile,description);
+}
+
+void mitobrevno::describeParam(int param,std::string description)
+{
+  param&=3;
+  mbFile.put(2+param);
+  writeustring(mbFile,description);
 }
 
 void mitobrevno::write(ostream &file,const MbEvent &event)
@@ -92,6 +116,11 @@ void mitobrevno::write(ostream &file,const MbEvent &event)
 void mitobrevno::writeBufferedLog()
 {
   MbEvent event;
+  if (!headerClosed)
+  {
+    mbFile.put(0);
+    headerClosed=true;
+  }
   mitoMutex.lock();
   while (buffer.size())
   {

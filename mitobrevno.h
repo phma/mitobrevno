@@ -36,6 +36,8 @@ namespace mitobrevno
 {
   void logEvent(int eventType,int param0=INT_MIN,int param1=INT_MIN,int param2=INT_MIN,int param3=INT_MIN);
   void openLogFile(std::string fileName);
+  void describeEvent(int eventType,std::string description);
+  void describeParam(int param,std::string description);
   void writeBufferedLog();
 }
 
