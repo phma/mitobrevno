@@ -39,11 +39,12 @@ find_package(Qt5 COMPONENTS Core Widgets Gui LinguistTools REQUIRED)
 find_package(Threads)
 
 #qt5_add_resources(lib_resources mitobrevno.qrc)
-#qt5_add_translation(qm_files perfecttin_en.ts perfecttin_es.ts)
+#qt5_add_translation(qm_files mitobrevno_en.ts mitobrevno_es.ts)
 # To update translations, run "lupdate *.cpp -ts *.ts" in the source directory.
 
 add_executable(mitobrevno main.cpp mainwindow.cpp mitobrevno.cpp ${lib_resources})
 target_link_libraries(mitobrevno ${CMAKE_THREAD_LIBS_INIT} Qt5::Widgets Qt5::Core)
+add_library(libmitobrevno STATIC mitobrevno.cpp)
 
 include(CheckIncludeFiles)
 
@@ -53,6 +54,8 @@ include(CheckIncludeFiles)
 # There is no need to install a binary built for fuzzing.
 if (NOT DEFINED NO_INSTALL)
 install(TARGETS mitobrevno DESTINATION bin)
+install(TARGETS libmitobrevno DESTINATION lib)
+install(FILES mitobrevno.h DESTINATION include)
 endif ()
 
 test_big_endian(BIGENDIAN)
@@ -64,6 +67,8 @@ set(MITOBREVNO_MINOR_VERSION 1)
 set(MITOBREVNO_PATCH_VERSION 0)
 set(MITOBREVNO_VERSION ${MITOBREVNO_MAJOR_VERSION}.${MITOBREVNO_MINOR_VERSION}.${MITOBREVNO_PATCH_VERSION})
 set(COPY_YEAR 2020)
+
+set_target_properties(libmitobrevno PROPERTIES OUTPUT_NAME "mitobrevno" VERSION ${MITOBREVNO_VERSION})
 
 include_directories(${PROJECT_BINARY_DIR})
 configure_file (config.h.in config.h)
