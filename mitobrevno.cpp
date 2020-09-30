@@ -75,6 +75,8 @@ void mitobrevno::logEvent(int eventType,int param0,int param1,int param2,int par
 void mitobrevno::openLogFile(string fileName)
 {
   mbFile.open(fileName,ios::binary|ios::out|ios::trunc);
+  writeint(mbFile,0x043103bc); // file signature: μб in UTF-16 (or бμ big-endian)
+  writeint(mbFile,0); // format version number
 }
 
 void mitobrevno::write(ostream &file,const MbEvent &event)
