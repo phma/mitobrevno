@@ -21,6 +21,7 @@
 #include <fstream>
 #include <chrono>
 #include <thread>
+#include <mutex>
 #include <map>
 #include <queue>
 #include "mitobrevno.h"
@@ -37,6 +38,7 @@ namespace mitobrevno
   void writelong(ostream &file,uint64_t i);
   void writeint(ostream &file,int i);
   void write(ostream &file,const MbEvent &event);
+  mutex mitoMutex;
 }
 
 void mitobrevno::writeint(ostream &file,int i)
@@ -65,7 +67,9 @@ void mitobrevno::logEvent(int eventType,int param0,int param1,int param2,int par
   event.param[1]=param1;
   event.param[2]=param2;
   event.param[3]=param3;
+  mitoMutex.lock();
   buffer.push(event);
+  mitoMutex.unlock();
 }
 
 void mitobrevno::openLogFile(string fileName)
@@ -86,10 +90,14 @@ void mitobrevno::write(ostream &file,const MbEvent &event)
 void mitobrevno::writeBufferedLog()
 {
   MbEvent event;
+  mitoMutex.lock();
   while (buffer.size())
   {
     write(mbFile,buffer.front());
     buffer.pop();
+    mitoMutex.unlock();
+    mitoMutex.lock();
   }
+  mitoMutex.unlock();
 }
 
