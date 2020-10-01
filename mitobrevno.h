@@ -32,6 +32,25 @@ struct MbEvent
   int param[4];
 };
 
+/* Call openLogFile before starting worker threads, then call describeEvent
+ * and describeParam to enter strings which will be displayed when you examine
+ * the log file. Call logEvent from worker threads and call writeBufferedLog
+ * regularly from the main thread.
+ *
+ * Event types are shorts of the form 0xtnnn, where t is as follows:
+ * 0: unpaired events
+ * 1: reserved
+ * 2,3: start and end events. It is an error if the same thread does 2nnn
+ * twice in a row or 3nnn twice in a row for the same nnn. It is an error
+ * if two threads are at the same time between 2nnn and 3nnn with the same nnn
+ * and the same parameters.
+ * 4,5: start and end events of read-locking. Two threads can be in the same
+ * 4nnn-5nnn pair at the same time, but one thread cannot be in 4nnn-5nnn while
+ * another thread is in 2nnn-3nnn.
+ * 6,7: start and end events of recursive locking. One thread can be in multiple
+ * 6nnn-7nnn pairs, but two threads cannot be in the same one.
+ * 8-f: reserved
+ */
 namespace mitobrevno
 {
   void logEvent(int eventType,int param0=INT_MIN,int param1=INT_MIN,int param2=INT_MIN,int param3=INT_MIN);
