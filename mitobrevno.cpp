@@ -38,9 +38,17 @@ namespace mitobrevno
   map<thread::id,int> threadNums;
   void writelong(ostream &file,uint64_t i);
   void writeint(ostream &file,int i);
+  void writeshort(ostream &file,short i);
   void writeustring(ostream &file,string s);
   void write(ostream &file,const MbEvent &event);
   mutex mitoMutex;
+}
+
+void mitobrevno::writeshort(ostream &file,short i)
+{
+  char buf[2];
+  *(short *)buf=i;
+  file.write(buf,2);
 }
 
 void mitobrevno::writeint(ostream &file,int i)
@@ -108,7 +116,7 @@ void mitobrevno::write(ostream &file,const MbEvent &event)
   int i;
   writelong(file,event.time);
   writeint(file,event.thread);
-  writeint(file,event.eventType);
+  writeshort(file,event.eventType);
   for (i=0;i<4;i++)
     writeint(file,event.param[i]);
 }
