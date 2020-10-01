@@ -79,6 +79,7 @@ void mitobrevno::logEvent(int eventType,int param0,int param1,int param2,int par
   event.time=now.time_since_epoch().count();
   if (!threadNums.count(this_thread::get_id()))
     threadNums[this_thread::get_id()]=threadNums.size();
+  event.eventType=eventType;
   event.thread=threadNums[this_thread::get_id()];
   event.param[0]=param0;
   event.param[1]=param1;
