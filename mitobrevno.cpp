@@ -97,12 +97,16 @@ void mitobrevno::logEvent(int eventType,int param0,int param1,int param2,int par
 
 void mitobrevno::openLogFile(string fileName)
 {
+  cr::time_point<cr::steady_clock> now=clk.now();
   char *envVar=getenv("MITOBREVNO_ON");
   if (envVar)
   {
     mbFile.open(fileName,ios::binary|ios::out|ios::trunc);
     writeint(mbFile,0x043103bc); // file signature: μб in UTF-16 (or бμ big-endian)
     writeint(mbFile,0); // format version number
+    writelong(mbFile,now.time_since_epoch().count());
+    writelong(mbFile,cr::steady_clock::period().num);
+    writelong(mbFile,cr::steady_clock::period().den);
     headerClosed=false;
     logEnabled=true;
     cerr<<"Logging to "<<fileName<<endl;
