@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 #include <fstream>
+#include <iostream>
+#include <cstdlib>
 #include <chrono>
 #include <thread>
 #include <mutex>
@@ -31,7 +33,7 @@ namespace cr=std::chrono;
 
 namespace mitobrevno
 {
-  bool headerClosed;
+  bool headerClosed,logEnabled;
   ofstream mbFile;
   queue<MbEvent> buffer;
   cr::steady_clock clk;
@@ -76,40 +78,60 @@ void mitobrevno::logEvent(int eventType,int param0,int param1,int param2,int par
 {
   cr::time_point<cr::steady_clock> now=clk.now();
   MbEvent event;
-  event.time=now.time_since_epoch().count();
-  if (!threadNums.count(this_thread::get_id()))
-    threadNums[this_thread::get_id()]=threadNums.size();
-  event.eventType=eventType;
-  event.thread=threadNums[this_thread::get_id()];
-  event.param[0]=param0;
-  event.param[1]=param1;
-  event.param[2]=param2;
-  event.param[3]=param3;
-  mitoMutex.lock();
-  buffer.push(event);
-  mitoMutex.unlock();
+  if (logEnabled)
+  {
+    event.time=now.time_since_epoch().count();
+    if (!threadNums.count(this_thread::get_id()))
+      threadNums[this_thread::get_id()]=threadNums.size();
+    event.eventType=eventType;
+    event.thread=threadNums[this_thread::get_id()];
+    event.param[0]=param0;
+    event.param[1]=param1;
+    event.param[2]=param2;
+    event.param[3]=param3;
+    mitoMutex.lock();
+    buffer.push(event);
+    mitoMutex.unlock();
+  }
 }
 
 void mitobrevno::openLogFile(string fileName)
 {
-  mbFile.open(fileName,ios::binary|ios::out|ios::trunc);
-  writeint(mbFile,0x043103bc); // file signature: μб in UTF-16 (or бμ big-endian)
-  writeint(mbFile,0); // format version number
-  headerClosed=false;
+  char *envVar=getenv("MITOBREVNO_ON");
+  if (envVar)
+  {
+    mbFile.open(fileName,ios::binary|ios::out|ios::trunc);
+    writeint(mbFile,0x043103bc); // file signature: μб in UTF-16 (or бμ big-endian)
+    writeint(mbFile,0); // format version number
+    headerClosed=false;
+    logEnabled=true;
+    cerr<<"Logging to "<<fileName<<endl;
+  }
+  else
+  {
+    logEnabled=false;
+    cerr<<"Not logging because MITOBREVNO_ON is not set"<<endl;
+  }
 }
 
 void mitobrevno::describeEvent(int eventType,std::string description)
 {
-  mbFile.put(1);
-  writeint(mbFile,eventType);
-  writeustring(mbFile,description);
+  if (logEnabled)
+  {
+    mbFile.put(1);
+    writeint(mbFile,eventType);
+    writeustring(mbFile,description);
+  }
 }
 
 void mitobrevno::describeParam(int param,std::string description)
 {
-  param&=3;
-  mbFile.put(2+param);
-  writeustring(mbFile,description);
+  if (logEnabled)
+  {
+    param&=3;
+    mbFile.put(2+param);
+    writeustring(mbFile,description);
+  }
 }
 
 void mitobrevno::write(ostream &file,const MbEvent &event)
