@@ -25,11 +25,23 @@
 #include <thread>
 #include <mutex>
 #include <map>
+#include <array>
 #include <queue>
 #include "mitobrevno.h"
 using namespace std;
 using namespace mitobrevno;
 namespace cr=std::chrono;
+
+/* Header records:
+ * 00
+ *	end of header
+ * 01 eeee string
+ *	event description
+ * 02 eeee ii ff
+ *	event eeee takes ii integers and ff floats
+ * 03 eeee pp string
+ *	event parameter description
+ */
 
 namespace mitobrevno
 {
@@ -38,12 +50,22 @@ namespace mitobrevno
   queue<MbEvent> buffer;
   cr::steady_clock clk;
   map<thread::id,int> threadNums;
+  map<int,array<int,2> > eventSizes;
+  int eventBase(int eventType);
   void writelong(ostream &file,uint64_t i);
   void writeint(ostream &file,int i);
   void writeshort(ostream &file,short i);
   void writeustring(ostream &file,string s);
   void write(ostream &file,const MbEvent &event);
   mutex mitoMutex;
+}
+
+int mitobrevno::eventBase(int eventType)
+{
+  eventType&=0xffff;
+  if (eventType>=0x2000 && eventType<0x8000)
+    eventType=(eventType&0xfff)+0x2000;
+  return eventType;
 }
 
 void mitobrevno::writeshort(ostream &file,short i)
@@ -128,13 +150,30 @@ void mitobrevno::describeEvent(int eventType,std::string description)
   }
 }
 
-void mitobrevno::describeParam(int param,std::string description)
+void mitobrevno::describeParam(int eventType,int param,std::string description)
 {
   if (logEnabled)
   {
-    param&=3;
-    mbFile.put(2+param);
+    mbFile.put(3);
+    writeshort(mbFile,eventType);
+    mbFile.put(param);
     writeustring(mbFile,description);
+  }
+}
+
+void mitobrevno::formatParam(int eventType,int nInts,int nFloats)
+{
+  if (logEnabled)
+  {
+    mbFile.put(2);
+    eventType=eventBase(eventType);
+    nInts&=255;
+    nFloats&=255;
+    writeshort(mbFile,eventType);
+    mbFile.put(nInts);
+    mbFile.put(nFloats);
+    eventSizes[eventType][0]=nInts;
+    eventSizes[eventType][1]=nFloats;
   }
 }
 

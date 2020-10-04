@@ -34,8 +34,9 @@ struct MbEvent
 
 /* Call openLogFile before starting worker threads, then call describeEvent
  * and describeParam to enter strings which will be displayed when you examine
- * the log file. Call logEvent from worker threads and call writeBufferedLog
- * regularly from the main thread.
+ * the log file. Call formatParam to tell the format of each type of event.
+ * Call logEvent from worker threads and call writeBufferedLog regularly
+ * from the main thread.
  *
  * Event types are shorts of the form 0xtnnn, where t is as follows:
  * 0: unpaired events
@@ -56,7 +57,8 @@ namespace mitobrevno
   void logEvent(int eventType,int param0=INT_MIN,int param1=INT_MIN,int param2=INT_MIN,int param3=INT_MIN);
   void openLogFile(std::string fileName);
   void describeEvent(int eventType,std::string description);
-  void describeParam(int param,std::string description);
+  void describeParam(int eventType,int param,std::string description);
+  void formatParam(int eventType,int nInts,int nFloats);
   void writeBufferedLog();
 }
 
