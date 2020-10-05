@@ -59,8 +59,8 @@ private:
   QFileDialog *fileDialog;
   QMessageBox *msgBox;
   QToolBar *toolbar;
-  QMenu *fileMenu,*viewMenu,*settingsMenu,*helpMenu,*exportMenu,*colorMenu;
-  QAction *openAction,*loadAction,*convertAction,*clearAction;
+  QMenu *fileMenu,*viewMenu,*settingsMenu,*helpMenu;
+  QAction *openAction,*closeAction,*exitAction;
   QAction *configureAction;
   QAction *aboutProgramAction,*aboutQtAction;
 };

@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
   toolbar=new QToolBar(this);
   addToolBar(Qt::TopToolBarArea,toolbar);
   toolbar->setIconSize(QSize(32,32));
+  makeActions();
   show();
   timer=new QTimer(this);
   timer->start(50);
@@ -38,7 +39,37 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 MainWindow::~MainWindow()
 {
 }
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
   event->accept();
+}
+
+void MainWindow::makeActions()
+{
+  int i;
+  fileMenu=menuBar()->addMenu(tr("&File"));
+  viewMenu=menuBar()->addMenu(tr("&View"));
+  settingsMenu=menuBar()->addMenu(tr("&Settings"));
+  helpMenu=menuBar()->addMenu(tr("&Help"));
+  // File menu
+  openAction=new QAction(this);
+  openAction->setIcon(QIcon::fromTheme("document-open"));
+  openAction->setText(tr("Open"));
+  fileMenu->addAction(openAction);
+  connect(openAction,SIGNAL(triggered(bool)),this,SLOT(openFile()));
+  exitAction=new QAction(this);
+  exitAction->setIcon(QIcon::fromTheme("application-exit"));
+  exitAction->setText(tr("Exit"));
+  fileMenu->addAction(exitAction);
+  connect(exitAction,SIGNAL(triggered(bool)),this,SLOT(close()));
+  // Help menu
+  aboutProgramAction=new QAction(this);
+  aboutProgramAction->setText(tr("About Mitobrevno"));
+  helpMenu->addAction(aboutProgramAction);
+  connect(aboutProgramAction,SIGNAL(triggered(bool)),this,SLOT(aboutProgram()));
+  aboutQtAction=new QAction(this);
+  aboutQtAction->setText(tr("About Qt"));
+  helpMenu->addAction(aboutQtAction);
+  connect(aboutQtAction,SIGNAL(triggered(bool)),this,SLOT(aboutQt()));
 }
