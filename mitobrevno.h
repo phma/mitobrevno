@@ -34,6 +34,13 @@ struct MbEvent
   std::vector<float> floatParams;
 };
 
+struct MbHeader
+{
+  int formatVersion;
+  uint64_t startTime;
+  int64_t num,den;
+};
+
 /* Call openLogFile before starting worker threads, then call describeEvent
  * and describeParam to enter strings which will be displayed when you examine
  * the log file. Call formatParam to tell the format of each type of event.
@@ -56,12 +63,15 @@ struct MbEvent
  */
 namespace mitobrevno
 {
+  // These are for use by programs being debugged.
   void logEvent(int eventType,const std::vector<int> &intParams,const std::vector<float> &floatParams);
   void openLogFile(std::string fileName);
   void describeEvent(int eventType,std::string description);
   void describeParam(int eventType,int param,std::string description);
   void formatParam(int eventType,int nInts,int nFloats);
   void writeBufferedLog();
+  // These are for examining log files.
+  MbHeader openLogFileRead(std::string fileName);
 }
 
 #endif

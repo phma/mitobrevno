@@ -47,12 +47,15 @@ namespace cr=std::chrono;
 namespace mitobrevno
 {
   bool headerClosed,logEnabled;
-  ofstream mbFile;
+  fstream mbFile;
   queue<MbEvent> buffer;
   cr::steady_clock clk;
   map<thread::id,int> threadNums;
   map<int,array<int,2> > eventSizes;
   int eventBase(int eventType);
+  short readshort(istream &file);
+  int readint(istream &file);
+  uint64_t readlong(istream &file);
   void writelong(ostream &file,uint64_t i);
   void writeint(ostream &file,int i);
   void writefloat(ostream &file,float i);
@@ -68,6 +71,27 @@ int mitobrevno::eventBase(int eventType)
   if (eventType>=0x2000 && eventType<0x8000)
     eventType=(eventType&0xfff)+0x2000;
   return eventType;
+}
+
+short mitobrevno::readshort(istream &file)
+{
+  char buf[2];
+  file.read(buf,2);
+  return *(short *)buf;
+}
+
+int mitobrevno::readint(istream &file)
+{
+  char buf[4];
+  file.read(buf,4);
+  return *(int *)buf;
+}
+
+uint64_t mitobrevno::readlong(istream &file)
+{
+  char buf[8];
+  file.read(buf,8);
+  return *(uint64_t *)buf;
 }
 
 void mitobrevno::writeshort(ostream &file,short i)
@@ -227,3 +251,20 @@ void mitobrevno::writeBufferedLog()
   mitoMutex.unlock();
 }
 
+MbHeader mitobrevno::openLogFileRead(string fileName)
+{
+  MbHeader ret;
+  int filesig;
+  mbFile.open(fileName,ios::binary|ios::in);
+  filesig=readint(mbFile);
+  if (filesig==0x043103bc)
+  {
+    ret.formatVersion=readint(mbFile);
+    ret.startTime=readlong(mbFile);
+    ret.num=readlong(mbFile);
+    ret.den=readlong(mbFile);
+  }
+  else
+    ret.num=ret.den=0;
+  return ret;
+}

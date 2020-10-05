@@ -24,6 +24,7 @@
 #include <QPixmap>
 #include <string>
 #include <array>
+#include "mitobrevno.h"
 
 class MainWindow: public QMainWindow
 {
@@ -54,6 +55,7 @@ protected:
   void closeEvent(QCloseEvent *event) override;
 private:
   int numberThreads;
+  MbHeader mbHeader;
   QTimer *timer;
   QFileDialog *fileDialog;
   QMessageBox *msgBox;

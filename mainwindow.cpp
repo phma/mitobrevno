@@ -18,10 +18,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <iostream>
 #include "config.h"
 #include "mainwindow.h"
-#include "mitobrevno.h"
 using namespace std;
+using namespace mitobrevno;
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 {
@@ -61,6 +62,8 @@ void MainWindow::openFile()
   {
     files=fileDialog->selectedFiles();
     fileName=files[0].toStdString();
+    mbHeader=openLogFileRead(fileName);
+    cout<<"Started at "<<mbHeader.startTime*mbHeader.num/(double)mbHeader.den<<endl;
   }
   delete fileDialog;
   fileDialog=nullptr;
