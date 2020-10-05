@@ -47,8 +47,7 @@ signals:
   void noCloudArea();
 public slots:
   //void tick();
-  //void openFile();
-  //void loadFile();
+  void openFile();
   void aboutProgram();
   void aboutQt();
 protected:

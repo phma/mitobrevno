@@ -45,6 +45,27 @@ void MainWindow::closeEvent(QCloseEvent *event)
   event->accept();
 }
 
+void MainWindow::openFile()
+{
+  int dialogResult;
+  QStringList files;
+  string fileName;
+  fileDialog=new QFileDialog(this);
+  fileDialog->setWindowTitle(tr("Open Log File"));
+  fileDialog->setFileMode(QFileDialog::ExistingFile);
+  fileDialog->setAcceptMode(QFileDialog::AcceptOpen);
+  fileDialog->selectFile("");
+  fileDialog->setNameFilter(tr("(*.log);;(*)"));
+  dialogResult=fileDialog->exec();
+  if (dialogResult)
+  {
+    files=fileDialog->selectedFiles();
+    fileName=files[0].toStdString();
+  }
+  delete fileDialog;
+  fileDialog=nullptr;
+}
+
 void MainWindow::aboutProgram()
 {
   QString progName=tr("Mitobrevno");
