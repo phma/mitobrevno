@@ -21,6 +21,7 @@
 #ifndef MITOBREVNO_H
 #define MITOBREVNO_H
 #include <string>
+#include <vector>
 #include <chrono>
 #include <climits>
 
