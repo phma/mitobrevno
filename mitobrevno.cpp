@@ -25,6 +25,7 @@
 #include <thread>
 #include <mutex>
 #include <map>
+#include <cmath>
 #include <array>
 #include <queue>
 #include "mitobrevno.h"
@@ -54,6 +55,7 @@ namespace mitobrevno
   int eventBase(int eventType);
   void writelong(ostream &file,uint64_t i);
   void writeint(ostream &file,int i);
+  void writefloat(ostream &file,float i);
   void writeshort(ostream &file,short i);
   void writeustring(ostream &file,string s);
   void write(ostream &file,const MbEvent &event);
@@ -73,6 +75,13 @@ void mitobrevno::writeshort(ostream &file,short i)
   char buf[2];
   *(short *)buf=i;
   file.write(buf,2);
+}
+
+void mitobrevno::writefloat(ostream &file,float i)
+{
+  char buf[4];
+  *(float *)buf=i;
+  file.write(buf,4);
 }
 
 void mitobrevno::writeint(ostream &file,int i)
@@ -96,10 +105,11 @@ void mitobrevno::writeustring(ostream &file,string s)
   file.put(0);
 }
 
-void mitobrevno::logEvent(int eventType,int param0,int param1,int param2,int param3)
+void mitobrevno::logEvent(int eventType,const vector<int> &intParams,const vector<float> &floatParams)
 {
   cr::time_point<cr::steady_clock> now=clk.now();
   MbEvent event;
+  int baseEvent=eventBase(eventType);
   if (logEnabled)
   {
     event.time=now.time_since_epoch().count();
@@ -107,10 +117,19 @@ void mitobrevno::logEvent(int eventType,int param0,int param1,int param2,int par
       threadNums[this_thread::get_id()]=threadNums.size();
     event.eventType=eventType;
     event.thread=threadNums[this_thread::get_id()];
-    event.param[0]=param0;
-    event.param[1]=param1;
-    event.param[2]=param2;
-    event.param[3]=param3;
+    event.intParams=intParams;
+    event.floatParams=floatParams;
+    if (!eventSizes.count(baseEvent))
+    {
+      eventSizes[baseEvent][0]=0;
+      eventSizes[baseEvent][1]=0;
+    }
+    while (event.intParams.size()<eventSizes[baseEvent][0])
+      event.intParams.push_back(INT_MIN);
+    while (event.floatParams.size()<eventSizes[baseEvent][1])
+      event.floatParams.push_back(NAN);
+    event.intParams.resize(eventSizes[baseEvent][0]);
+    event.floatParams.resize(eventSizes[baseEvent][1]);
     mitoMutex.lock();
     buffer.push(event);
     mitoMutex.unlock();
@@ -183,8 +202,10 @@ void mitobrevno::write(ostream &file,const MbEvent &event)
   writelong(file,event.time);
   writeint(file,event.thread);
   writeshort(file,event.eventType);
-  for (i=0;i<4;i++)
-    writeint(file,event.param[i]);
+  for (i=0;i<event.intParams.size();i++)
+    writeint(file,event.intParams[i]);
+  for (i=0;i<event.floatParams.size();i++)
+    writefloat(file,event.floatParams[i]);
 }
 
 void mitobrevno::writeBufferedLog()

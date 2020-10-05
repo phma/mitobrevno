@@ -29,7 +29,8 @@ struct MbEvent
   uint64_t time;
   int thread;
   int eventType;
-  int param[4];
+  std::vector<int> intParams;
+  std::vector<float> floatParams;
 };
 
 /* Call openLogFile before starting worker threads, then call describeEvent
@@ -54,7 +55,7 @@ struct MbEvent
  */
 namespace mitobrevno
 {
-  void logEvent(int eventType,int param0=INT_MIN,int param1=INT_MIN,int param2=INT_MIN,int param3=INT_MIN);
+  void logEvent(int eventType,const std::vector<int> &intParams,const std::vector<float> &floatParams);
   void openLogFile(std::string fileName);
   void describeEvent(int eventType,std::string description);
   void describeParam(int eventType,int param,std::string description);
