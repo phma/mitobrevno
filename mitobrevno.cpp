@@ -164,7 +164,7 @@ void mitobrevno::describeEvent(int eventType,std::string description)
   if (logEnabled)
   {
     mbFile.put(1);
-    writeint(mbFile,eventType);
+    writeshort(mbFile,eventType);
     writeustring(mbFile,description);
   }
 }
