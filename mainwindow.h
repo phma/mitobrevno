@@ -49,8 +49,8 @@ public slots:
   //void tick();
   //void openFile();
   //void loadFile();
-  //void aboutProgram();
-  //void aboutQt();
+  void aboutProgram();
+  void aboutQt();
 protected:
   void closeEvent(QCloseEvent *event) override;
 private:

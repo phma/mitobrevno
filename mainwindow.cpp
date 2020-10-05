@@ -45,6 +45,19 @@ void MainWindow::closeEvent(QCloseEvent *event)
   event->accept();
 }
 
+void MainWindow::aboutProgram()
+{
+  QString progName=tr("Mitobrevno");
+  QMessageBox::about(this,tr("Mitobrevno"),
+		     tr("%1\nVersion %2\nCopyright %3 Pierre Abbat\nLicense Apache 2")
+		     .arg(progName).arg(QString(VERSION)).arg(COPY_YEAR));
+}
+
+void MainWindow::aboutQt()
+{
+  QMessageBox::aboutQt(this,tr("Mitobrevno"));
+}
+
 void MainWindow::makeActions()
 {
   int i;
