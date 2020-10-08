@@ -249,6 +249,7 @@ void mitobrevno::writeBufferedLog()
     mitoMutex.lock();
   }
   mitoMutex.unlock();
+  mbFile.flush();
 }
 
 MbHeader mitobrevno::openLogFileRead(string fileName)
