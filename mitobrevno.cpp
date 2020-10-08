@@ -48,7 +48,7 @@ namespace mitobrevno
 {
   bool headerClosed,logEnabled;
   fstream mbFile;
-  queue<MbEvent> buffer;
+  queue<MbEvent> buffer,crashBuffer;
   cr::steady_clock clk;
   map<thread::id,int> threadNums;
   map<int,array<int,2> > eventSizes;
@@ -243,13 +243,20 @@ void mitobrevno::writeBufferedLog()
   mitoMutex.lock();
   while (buffer.size())
   {
-    write(mbFile,buffer.front());
+    event=buffer.front();
     buffer.pop();
+    crashBuffer.push(event);
     mitoMutex.unlock();
+    write(mbFile,event);
     mitoMutex.lock();
   }
   mitoMutex.unlock();
   mbFile.flush();
+  /* crashBuffer is in case the program crashes and dumps core without flushing.
+   * Its size is capped at 192 because gdb by default shows the first 200 items.
+   */
+  while (crashBuffer.size()>192)
+    crashBuffer.pop();
 }
 
 MbHeader mitobrevno::openLogFileRead(string fileName)
