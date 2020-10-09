@@ -52,10 +52,12 @@ namespace mitobrevno
   cr::steady_clock clk;
   map<thread::id,int> threadNums;
   map<int,array<int,2> > eventSizes;
+  map<int,string> eventDescriptions,paramDescriptions;
   int eventBase(int eventType);
   short readshort(istream &file);
   int readint(istream &file);
   uint64_t readlong(istream &file);
+  string readustring(istream &file);
   void writelong(ostream &file,uint64_t i);
   void writeint(ostream &file,int i);
   void writefloat(ostream &file,float i);
@@ -127,6 +129,19 @@ void mitobrevno::writeustring(ostream &file,string s)
 {
   file.write(s.data(),s.length());
   file.put(0);
+}
+
+string mitobrevno::readustring(istream &file)
+{
+  int ch;
+  string ret;
+  do
+  {
+    ch=file.get();
+    if (ch>0)
+      ret+=(char)ch;
+  } while (ch>0);
+  return ret;
 }
 
 void mitobrevno::logEvent(int eventType,const vector<int> &intParams,const vector<float> &floatParams)
@@ -262,7 +277,10 @@ void mitobrevno::writeBufferedLog()
 MbHeader mitobrevno::openLogFileRead(string fileName)
 {
   MbHeader ret;
-  int filesig;
+  int filesig,nInts,nFloats;
+  int ch,eventType,param;
+  bool inHeader=true;
+  string description;
   mbFile.open(fileName,ios::binary|ios::in);
   filesig=readint(mbFile);
   if (filesig==0x043103bc)
@@ -271,6 +289,37 @@ MbHeader mitobrevno::openLogFileRead(string fileName)
     ret.startTime=readlong(mbFile);
     ret.num=readlong(mbFile);
     ret.den=readlong(mbFile);
+    while (inHeader)
+    {
+      ch=mbFile.get();
+      switch (ch)
+      {
+	case 0:
+	  inHeader=false;
+	  break;
+	case 1: // describeEvent
+	  eventType=readshort(mbFile);
+	  description=readustring(mbFile);
+	  eventDescriptions[eventType]=description;
+	  break;
+	case 2: // formatParam
+	  eventType=readshort(mbFile);
+	  nInts=mbFile.get();
+	  nFloats=mbFile.get();
+	  eventSizes[eventType][0]=nInts;
+	  eventSizes[eventType][1]=nFloats;
+	  break;
+	case 3: // describeParam
+	  eventType=readshort(mbFile);
+	  param=mbFile.get();
+	  description=readustring(mbFile);
+	  paramDescriptions[param*65536+eventType]=description;
+	  break;
+	default:
+	  ret.num=ret.den=0;
+	  inHeader=false;
+      }
+    }
   }
   else
     ret.num=ret.den=0;
