@@ -56,6 +56,7 @@ namespace mitobrevno
   int eventBase(int eventType);
   short readshort(istream &file);
   int readint(istream &file);
+  float readfloat(istream &file);
   uint64_t readlong(istream &file);
   string readustring(istream &file);
   void writelong(ostream &file,uint64_t i);
@@ -87,6 +88,13 @@ int mitobrevno::readint(istream &file)
   char buf[4];
   file.read(buf,4);
   return *(int *)buf;
+}
+
+float mitobrevno::readfloat(istream &file)
+{
+  char buf[4];
+  file.read(buf,4);
+  return *(float *)buf;
 }
 
 uint64_t mitobrevno::readlong(istream &file)
@@ -323,5 +331,22 @@ MbHeader mitobrevno::openLogFileRead(string fileName)
   }
   else
     ret.num=ret.den=0;
+  return ret;
+}
+
+MbEvent mitobrevno::readEvent()
+{
+  MbEvent ret;
+  int i,baseEvent;
+  ret.time=readlong(mbFile);
+  ret.thread=readint(mbFile);
+  ret.eventType=readshort(mbFile);
+  baseEvent=eventBase(ret.eventType);
+  for (i=0;i<eventSizes[baseEvent][0];i++)
+    ret.intParams.push_back(readint(mbFile));
+  for (i=0;i<eventSizes[baseEvent][1];i++)
+    ret.floatParams.push_back(readfloat(mbFile));
+  if (!mbFile.good())
+    ret.time=0;
   return ret;
 }

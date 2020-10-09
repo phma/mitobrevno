@@ -56,6 +56,7 @@ protected:
 private:
   int numberThreads;
   MbHeader mbHeader;
+  std::vector<MbEvent> events;
   QTimer *timer;
   QFileDialog *fileDialog;
   QMessageBox *msgBox;

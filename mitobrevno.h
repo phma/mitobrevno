@@ -72,6 +72,7 @@ namespace mitobrevno
   void writeBufferedLog();
   // These are for examining log files.
   MbHeader openLogFileRead(std::string fileName);
+  MbEvent readEvent();
 }
 
 #endif

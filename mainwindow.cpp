@@ -51,6 +51,7 @@ void MainWindow::openFile()
   int dialogResult;
   QStringList files;
   string fileName;
+  MbEvent event;
   fileDialog=new QFileDialog(this);
   fileDialog->setWindowTitle(tr("Open Log File"));
   fileDialog->setFileMode(QFileDialog::ExistingFile);
@@ -64,6 +65,14 @@ void MainWindow::openFile()
     fileName=files[0].toStdString();
     mbHeader=openLogFileRead(fileName);
     cout<<"Started at "<<mbHeader.startTime*mbHeader.num/(double)mbHeader.den<<endl;
+    while (true)
+    {
+      event=readEvent();
+      if (event.time==0)
+	break;
+      events.push_back(event);
+    }
+    cout<<events.size()<<" events read\n";
   }
   delete fileDialog;
   fileDialog=nullptr;
