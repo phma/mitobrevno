@@ -49,7 +49,7 @@ struct MbHeader
  *
  * Event types are shorts of the form 0xtnnn, where t is as follows:
  * 0: unpaired events
- * 1: reserved
+ * 1: state changes
  * 2,3: start and end events. It is an error if the same thread does 2nnn
  * twice in a row or 3nnn twice in a row for the same nnn. It is an error
  * if two threads are at the same time between 2nnn and 3nnn with the same nnn
