@@ -22,8 +22,51 @@
 #include <iostream>
 #include <fstream>
 #include "mitobrevno.h"
+#include "roundup.h"
+
+#define tassert(x) testfail|=(!(x))
+
+using namespace std;
+
+bool testfail=false;
+vector<string> args;
+
+void testroundUp()
+{
+  array<unsigned long,2> result;
+  result=roundUp(342739564245);
+  cout<<result[1]<<"×"<<result[0]<<'='<<result[0]*result[1]<<endl;
+}
+
+bool shoulddo(string testname)
+{
+  int i;
+  bool ret,listTests=false;
+  if (testfail)
+  {
+    cout<<"failed before "<<testname<<endl;
+    //sleep(2);
+  }
+  ret=args.size()==0;
+  for (i=0;i<args.size();i++)
+  {
+    if (testname==args[i])
+      ret=true;
+    if (args[i]=="-l")
+      listTests=true;
+  }
+  if (listTests)
+    cout<<testname<<endl;
+  return ret;
+}
 
 int main(int argc, char *argv[])
 {
-  return 0;
+  int i;
+  for (i=1;i<argc;i++)
+    args.push_back(argv[i]);
+  if (shoulddo("roundup"))
+    testroundUp();
+  cout<<"\nTest "<<(testfail?"failed":"passed")<<endl;
+  return testfail;
 }
