@@ -34,3 +34,17 @@ class TimeCanvas: public QWidget
 public:
   TimeCanvas(QWidget *parent=0);
 };
+
+class TimeScale: public QWidget
+{
+  Q_OBJECT
+public:
+  TimeScale(QWidget *parent=0);
+public slots:
+  void setRange(uint64_t maxTime,double res);
+private:
+  unsigned long scrollbarMax,scrollbarTick;
+  double resolution; // inverse, e.g. for 1 ns it's 1e9, not 1e-9
+  TimeCanvas *timeCanvas;
+  QScrollBar *scrollbar;
+};

@@ -24,3 +24,13 @@ TimeCanvas::TimeCanvas(QWidget *parent):QWidget(parent)
 {
   show();
 }
+
+TimeScale::TimeScale(QWidget *parent):QWidget(parent)
+{
+  show();
+}
+
+void TimeScale::setRange(uint64_t maxTime,double res)
+{
+  resolution=res;
+}
