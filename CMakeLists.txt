@@ -46,6 +46,7 @@ add_executable(mitobrevno main.cpp mainwindow.cpp mitobrevno.cpp
 	       timescale.cpp zoom.cpp
 	       ${lib_resources} ${qm_files})
 add_executable(fuzzbrevno fuzzbrevno.cpp)
+add_executable(testbrevno testbrevno.cpp)
 target_link_libraries(mitobrevno ${CMAKE_THREAD_LIBS_INIT} Qt5::Widgets Qt5::Core)
 add_library(libmitobrevno STATIC mitobrevno.cpp)
 
