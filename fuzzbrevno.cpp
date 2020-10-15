@@ -23,7 +23,28 @@
 #include <fstream>
 #include "mitobrevno.h"
 
+using namespace std;
+using namespace mitobrevno;
+
 int main(int argc, char *argv[])
 {
+  MbHeader mbHeader;
+  vector<MbEvent> events;
+  MbEvent event;
+  string filename;
+  if (argc>1)
+  {
+    filename=argv[1];
+    mbHeader=openLogFileRead(filename);
+    cout<<"Started at "<<mbHeader.startTime*mbHeader.num/(double)mbHeader.den<<endl;
+    while (true)
+    {
+      event=readEvent();
+      if (event.time==0)
+	break;
+      events.push_back(event);
+    }
+    cout<<events.size()<<" events read\n";
+  }
   return 0;
 }
