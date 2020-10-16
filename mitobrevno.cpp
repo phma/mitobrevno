@@ -53,7 +53,6 @@ namespace mitobrevno
   map<thread::id,int> threadNums;
   map<int,array<int,2> > eventSizes;
   map<int,string> eventDescriptions,paramDescriptions;
-  int eventBase(int eventType);
   short readshort(istream &file);
   int readint(istream &file);
   float readfloat(istream &file);

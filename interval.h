@@ -1,6 +1,6 @@
 /******************************************************/
 /*                                                    */
-/* fuzzbrevno.cpp - main program for fuzzing          */
+/* interval.h - event intervals                       */
 /*                                                    */
 /******************************************************/
 /* Copyright 2020 Pierre Abbat.
@@ -19,35 +19,15 @@
  * limitations under the License.
  */
 
-#include <iostream>
-#include <fstream>
 #include "mitobrevno.h"
-#include "interval.h"
 
-using namespace std;
-using namespace mitobrevno;
-
-int main(int argc, char *argv[])
+struct Interval
 {
-  MbHeader mbHeader;
-  int nEvents=0;
-  //vector<MbEvent> events;
-  MbEvent event;
-  string filename;
-  if (argc>1)
-  {
-    filename=argv[1];
-    mbHeader=openLogFileRead(filename);
-    cout<<"Started at "<<mbHeader.startTime*mbHeader.num/(double)mbHeader.den<<endl;
-    while (true)
-    {
-      event=readEvent();
-      if (event.time==0)
-	break;
-      intervalize(event,mbHeader.startTime);
-      nEvents++;
-    }
-    cout<<nEvents<<" events read\n";
-  }
-  return 0;
-}
+  uint64_t start,end;
+  int thread;
+  int eventType;
+  std::vector<int> intParams;
+  std::vector<float> floatParams;
+};
+
+void intervalize (MbEvent &event,uint64_t startTime);

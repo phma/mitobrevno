@@ -71,6 +71,7 @@ namespace mitobrevno
   void formatParam(int eventType,int nInts,int nFloats);
   void writeBufferedLog();
   // These are for examining log files.
+  int eventBase(int eventType);
   MbHeader openLogFileRead(std::string fileName);
   MbEvent readEvent();
 }

@@ -42,10 +42,10 @@ find_package(Threads)
 qt5_add_translation(qm_files mitobrevno_en.ts mitobrevno_es.ts)
 # To update translations, run "lupdate *.cpp -ts *.ts" in the source directory.
 
-add_executable(mitobrevno main.cpp mainwindow.cpp mitobrevno.cpp 
+add_executable(mitobrevno interval.cpp main.cpp mainwindow.cpp mitobrevno.cpp 
 	       timescale.cpp zoom.cpp
 	       ${lib_resources} ${qm_files})
-add_executable(fuzzbrevno fuzzbrevno.cpp mitobrevno.cpp)
+add_executable(fuzzbrevno fuzzbrevno.cpp interval.cpp mitobrevno.cpp)
 add_executable(testbrevno testbrevno.cpp roundup.cpp)
 target_link_libraries(mitobrevno ${CMAKE_THREAD_LIBS_INIT} Qt5::Widgets Qt5::Core)
 add_library(libmitobrevno STATIC mitobrevno.cpp)
