@@ -30,9 +30,11 @@ using namespace mitobrevno;
  */
 
 vector<MbEvent> pending;
+vector<Interval> intervals;
 
 void storeInterval(Interval &iv)
 { // stub
+  intervals.push_back(iv);
 }
 
 bool sameButTime(const MbEvent &a,const MbEvent &b)
