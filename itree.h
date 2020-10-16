@@ -18,20 +18,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#include "interval.h"
+
 /* The interval tree is made by plotting start time against end time and
  * splitting the resulting isosceles right triangle, whose hypotenuse contains
  * the instant intervals, as follows:
- * If the side is 0, it is empty.
- * If the side is 1, it contains one interval.
- * If the side is 2n, it is split into 3 triangles of side n and 1 of side n-1.
- * If the side is 2n+1, it is split into 3 triangles of side n and 1 of side n+1.
- *
- *  *  *  *  *  *  *  *  *
- *  *  *  *  *  *  *  *
- *  *  *  *  *  *  *
- *  *  *  *  *  *
- *  *  *  *  *
- *  *  *  *
- *  *  *
- *  *
+ * If the side is 0, it contains one interval (which may have two instances because of errors).
+ * If the side is 2n-1 (n>0), it is split into 3 triangles of side n-1 and 1 of side 2-n.
+ * If the side is 2n (n>0), it is split into 3 triangles of side n-1 and 1 of side -n.
  */
+ // * * * *|* * * *
+ // * * */*|* * *
+ // * */* *|* *
+ // */*_*_*|*
+ // * * * *
+ // * * *
+ // * *
+ // *
+/* The bottom corner is (0,0). The corner is (0,7); the side is 7. It is divided into:
+ * (0,7) side 3
+ * (0,3) side 3
+ * (4,7) side 3
+ * (3,4) side -2.
+ */
+
+class IntervalTree
+{
+private:
+  int64_t start,end,side;
+  vector<Interval> leaf;
+  IntervalTree *sub[4];
+};
