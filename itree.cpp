@@ -27,3 +27,24 @@ IntervalTree::IntervalTree(int64_t first,int64_t last)
   end=last;
   side=last-first;
 }
+
+int IntervalTree::subtree(int64_t first,int64_t last)
+{
+  int64_t iside=side;
+  int ret=0;
+  first-=start;
+  last-=end;
+  if (side<0)
+  {
+    iside=-iside;
+    first=-first;
+    last=-last;
+  }
+  if (first-last<(iside+1)/2)
+    ret=1;
+  if (first>iside/2)
+    ret=2;
+  if (-last>iside/2)
+    ret=3;
+  return ret;
+}

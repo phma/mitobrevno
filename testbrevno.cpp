@@ -23,6 +23,7 @@
 #include <fstream>
 #include "mitobrevno.h"
 #include "roundup.h"
+#include "itree.h"
 
 #define tassert(x) testfail|=(!(x))
 
@@ -36,6 +37,21 @@ void testroundUp()
   array<unsigned long,2> result;
   result=roundUp(342739564245);
   cout<<result[1]<<"×"<<result[0]<<'='<<result[0]*result[1]<<endl;
+}
+
+void testitree()
+{
+  int n,i,j;
+  for (n=0;n<20;n++)
+  {
+    IntervalTree itree(0,n);
+    for (i=n;i>=0;i--)
+    {
+      for (j=0;j<=i;j++)
+	cout<<itree.subtree(j,i)<<' ';
+      cout<<endl;
+    }
+  }
 }
 
 bool shoulddo(string testname)
@@ -67,6 +83,8 @@ int main(int argc, char *argv[])
     args.push_back(argv[i]);
   if (shoulddo("roundup"))
     testroundUp();
+  if (shoulddo("itree"))
+    testitree();
   cout<<"\nTest "<<(testfail?"failed":"passed")<<endl;
   return testfail;
 }
