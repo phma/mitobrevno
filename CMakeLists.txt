@@ -42,7 +42,7 @@ find_package(Threads)
 qt5_add_translation(qm_files mitobrevno_en.ts mitobrevno_es.ts)
 # To update translations, run "lupdate *.cpp -ts *.ts" in the source directory.
 
-add_executable(mitobrevno interval.cpp main.cpp mainwindow.cpp mitobrevno.cpp 
+add_executable(mitobrevno interval.cpp itree.cpp main.cpp mainwindow.cpp mitobrevno.cpp 
 	       timescale.cpp zoom.cpp
 	       ${lib_resources} ${qm_files})
 add_executable(fuzzbrevno fuzzbrevno.cpp interval.cpp mitobrevno.cpp)
