@@ -41,17 +41,26 @@ void testroundUp()
 
 void testitree()
 {
-  int n,i,j;
-  for (n=0;n<20;n++)
+  int n,i,j,s;
+  int count[4];
+  for (i=0;i<4;i++)
+    count[i]=0;
+  for (n=18;n<20;n++)
   {
     IntervalTree itree(0,n);
     for (i=n;i>=0;i--)
     {
       for (j=0;j<=i;j++)
-	cout<<itree.subtree(j,i)<<' ';
+      {
+	s=itree.subtree(j,i);
+	cout<<s<<' ';
+	count[s]++;
+      }
       cout<<endl;
     }
   }
+  for (i=0;i<4;i++)
+    tassert(count[i]==100);
 }
 
 bool shoulddo(string testname)
