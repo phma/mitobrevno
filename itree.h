@@ -47,6 +47,7 @@ class IntervalTree
 {
 public:
   IntervalTree(int64_t first,int64_t last); // inclusive
+  ~IntervalTree();
   int subtree(int64_t first,int64_t last);
 private:
   int64_t start,end,side;

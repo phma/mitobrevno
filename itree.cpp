@@ -31,6 +31,13 @@ IntervalTree::IntervalTree(int64_t first,int64_t last)
   side=last-first;
 }
 
+IntervalTree::~IntervalTree()
+{
+  int i;
+  for (i=0;i<4;i++)
+    delete sub[i];
+}
+
 int IntervalTree::subtree(int64_t first,int64_t last)
 {
   int64_t iside=side;
