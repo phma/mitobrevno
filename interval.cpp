@@ -21,6 +21,7 @@
 
 #include <vector>
 #include "interval.h"
+#include "itree.h"
 
 using namespace std;
 using namespace mitobrevno;
@@ -56,7 +57,7 @@ bool stateChanged(const MbEvent &a,const MbEvent &b)
   return ret;
 }
 
-void intervalize (MbEvent &event,uint64_t startTime)
+void intervalize(MbEvent &event,uint64_t startTime)
 {
   int i;
   Interval iv;
@@ -115,4 +116,22 @@ void intervalize (MbEvent &event,uint64_t startTime)
   }
 }
 
-      
+void treeize()
+{
+  int64_t earliest=INT64_MAX,latest=INT64_MIN;
+  int i;
+  for (i=0;i<intervals.size();i++)
+  {
+    if (intervals[i].start<earliest)
+      earliest=intervals[i].start;
+    if (intervals[i].end<earliest)
+      earliest=intervals[i].end;
+    if (intervals[i].start>latest)
+      latest=intervals[i].start;
+    if (intervals[i].end>latest)
+      latest=intervals[i].end;
+  }
+  intervalTree=IntervalTree(earliest,latest);
+  for (i=0;i<intervals.size();i++)
+    intervalTree.insert(intervals[i]);
+}

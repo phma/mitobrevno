@@ -46,6 +46,7 @@
 class IntervalTree
 {
 public:
+  IntervalTree();
   IntervalTree(int64_t first,int64_t last); // inclusive
   ~IntervalTree();
   int subtree(int64_t first,int64_t last);
@@ -56,3 +57,5 @@ private:
   std::vector<Interval> leaf;
   IntervalTree *sub[4];
 };
+
+extern IntervalTree intervalTree;

@@ -45,7 +45,7 @@ qt5_add_translation(qm_files mitobrevno_en.ts mitobrevno_es.ts)
 add_executable(mitobrevno interval.cpp itree.cpp main.cpp mainwindow.cpp mitobrevno.cpp 
 	       timescale.cpp zoom.cpp
 	       ${lib_resources} ${qm_files})
-add_executable(fuzzbrevno fuzzbrevno.cpp interval.cpp mitobrevno.cpp)
+add_executable(fuzzbrevno fuzzbrevno.cpp interval.cpp itree.cpp mitobrevno.cpp)
 add_executable(testbrevno testbrevno.cpp itree.cpp roundup.cpp)
 target_link_libraries(mitobrevno ${CMAKE_THREAD_LIBS_INIT} Qt5::Widgets Qt5::Core)
 add_library(libmitobrevno STATIC mitobrevno.cpp)

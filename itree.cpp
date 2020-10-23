@@ -22,6 +22,16 @@
 #include <cassert>
 #include "itree.h"
 
+IntervalTree intervalTree;
+
+IntervalTree::IntervalTree()
+{
+  int i;
+  for (i=0;i<4;i++)
+    sub[i]=nullptr;
+  start=end=side=0;
+}
+
 IntervalTree::IntervalTree(int64_t first,int64_t last)
 {
   int i;

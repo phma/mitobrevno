@@ -49,5 +49,6 @@ int main(int argc, char *argv[])
     }
     cout<<nEvents<<" events read\n";
   }
+  treeize();
   return 0;
 }

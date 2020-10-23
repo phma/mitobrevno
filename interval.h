@@ -19,6 +19,9 @@
  * limitations under the License.
  */
 
+#ifndef INTERVAL_H
+#define INTERVAL_H
+
 #include "mitobrevno.h"
 
 struct Interval
@@ -30,4 +33,7 @@ struct Interval
   std::vector<float> floatParams;
 };
 
-void intervalize (MbEvent &event,uint64_t startTime);
+void intervalize(MbEvent &event,uint64_t startTime);
+void treeize();
+
+#endif
