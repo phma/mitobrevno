@@ -46,7 +46,7 @@ bool sameButTime(const MbEvent &a,const MbEvent &b)
     if (a.intParams[i]!=b.intParams[i])
       ret=false;
   for (i=0;ret && i<a.floatParams.size();i++)
-    if (a.intParams[i]!=b.floatParams[i])
+    if (a.floatParams[i]!=b.floatParams[i])
       ret=false;
   return ret;
 }
