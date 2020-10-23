@@ -19,6 +19,7 @@
  * limitations under the License.
  */
 
+#include <iostream>
 #include <vector>
 #include "interval.h"
 #include "itree.h"
@@ -131,7 +132,12 @@ void treeize()
     if (intervals[i].end>latest)
       latest=intervals[i].end;
   }
-  intervalTree=IntervalTree(earliest,latest);
-  for (i=0;i<intervals.size();i++)
-    intervalTree.insert(intervals[i]);
+  if (earliest<=latest)
+  {
+    intervalTree=IntervalTree(earliest,latest);
+    for (i=0;i<intervals.size();i++)
+      intervalTree.insert(intervals[i]);
+  }
+  else
+    cerr<<"Interval range is backward\n";
 }
