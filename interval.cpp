@@ -118,7 +118,7 @@ void intervalize(MbEvent &event,uint64_t startTime)
 
 void treeize()
 {
-  int64_t earliest=INT64_MAX,latest=INT64_MIN;
+  int64_t earliest=INT64_MAX,latest=0;
   int i;
   for (i=0;i<intervals.size();i++)
   {
