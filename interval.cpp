@@ -136,7 +136,10 @@ void treeize()
   {
     intervalTree=IntervalTree(earliest,latest);
     for (i=0;i<intervals.size();i++)
-      intervalTree.insert(intervals[i]);
+      if (intervals[i].start<=intervals[i].end)
+	intervalTree.insert(intervals[i]);
+      else
+	cerr<<"Interval is backward\n";
   }
   else
     cerr<<"Interval range is backward\n";
