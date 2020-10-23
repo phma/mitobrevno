@@ -43,6 +43,8 @@ void testitree()
 {
   int n,i,j,s;
   int count[4];
+  IntervalTree itree0(0,987);
+  Interval iv;
   for (i=0;i<4;i++)
     count[i]=0;
   for (n=18;n<20;n++)
@@ -61,6 +63,9 @@ void testitree()
   }
   for (i=0;i<4;i++)
     tassert(count[i]==100);
+  iv.start=512;
+  iv.end=729;
+  itree0.insert(iv);
 }
 
 bool shoulddo(string testname)

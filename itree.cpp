@@ -83,7 +83,7 @@ void IntervalTree::insert(Interval iv)
     int sign=(side>0)-(side<0);
     int64_t subside=sign*(((side*sign)-1)/2);
     int64_t offset=sign*((side*sign)/2+1);
-    int64_t substart,subend;
+    int64_t substart=start,subend=end;
     if (!subt)
       subside=-sign*(((side*sign)-2*(side&1))/2);
     if (sub[subt]==nullptr)
