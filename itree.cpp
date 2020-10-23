@@ -97,10 +97,10 @@ void IntervalTree::insert(Interval iv)
 	case 1:
 	  break;
 	case 2:
-	  substart=start+offset-sign;
+	  substart=start+offset;
 	  break;
 	case 3:
-	  subend=end-offset+sign;
+	  subend=end-offset;
 	  break;
       }
       sub[subt]=new IntervalTree(substart,subend,subside);
