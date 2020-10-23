@@ -49,6 +49,7 @@ public:
   IntervalTree(int64_t first,int64_t last); // inclusive
   ~IntervalTree();
   int subtree(int64_t first,int64_t last);
+  void insert(Interval iv);
 private:
   IntervalTree(int64_t first,int64_t last,int64_t size);
   int64_t start,end,side;

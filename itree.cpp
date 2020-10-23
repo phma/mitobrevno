@@ -19,6 +19,7 @@
  * limitations under the License.
  */
 
+#include <cassert>
 #include "itree.h"
 
 IntervalTree::IntervalTree(int64_t first,int64_t last)
@@ -67,4 +68,43 @@ int IntervalTree::subtree(int64_t first,int64_t last)
   if (-last>iside/2)
     ret=3;
   return ret;
+}
+
+void IntervalTree::insert(Interval iv)
+{
+  if (side==0)
+  {
+    assert(iv.start==start && iv.end==end);
+    leaf.push_back(iv);
+  }
+  else
+  {
+    int subt=subtree(iv.start,iv.end);
+    int sign=(side>0)-(side<0);
+    int64_t subside=sign*(((side*sign)-1)/2);
+    int64_t offset=sign*((side*sign)/2+1);
+    int64_t substart,subend;
+    if (!subt)
+      subside=-sign*(((side*sign)-2*(side&1))/2);
+    if (sub[subt]==nullptr)
+    {
+      switch (subt)
+      {
+	case 0:
+	  substart=start+offset-sign;
+	  subend=end-offset+sign;
+	  break;
+	case 1:
+	  break;
+	case 2:
+	  substart=start+offset-sign;
+	  break;
+	case 3:
+	  subend=end-offset+sign;
+	  break;
+      }
+      sub[subt]=new IntervalTree(substart,subend,subside);
+    }
+    sub[subt]->insert(iv);
+  }
 }
