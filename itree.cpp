@@ -125,3 +125,25 @@ void IntervalTree::insert(Interval iv)
     sub[subt]->insert(iv);
   }
 }
+
+int leg(int64_t a,int64_t b)
+{
+  return (a<b)+(a<=b);
+}
+
+bool IntervalTree::overlap(const IntervalRange &ir)
+/* Returns true if the range overlaps the triangle covered by the tree.
+ * Also returns true, wrongly, if the interval is in the other half of the square.
+ */
+{
+  int legStart=leg(start,ir.firstStart)*27+leg(start,ir.lastStart)*9+
+      leg(start-side,ir.firstStart)*3+leg(start-side,ir.lastStart);
+  int legEnd=leg(end,ir.firstEnd)*27+leg(end,ir.lastEnd)*9+
+      leg(end+side,ir.firstEnd)*3+leg(end+side,ir.lastEnd);
+  bool startOverlap=legStart!=0 && legStart!=80;
+  bool endOverlap=legEnd!=0 && legEnd!=80;
+  if (ir.conjunction)
+    return startOverlap && endOverlap;
+  else
+    return startOverlap || endOverlap;
+}
