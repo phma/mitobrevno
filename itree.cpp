@@ -24,6 +24,13 @@
 
 IntervalTree intervalTree;
 
+IntervalRange::IntervalRange()
+{
+  conjunction=true;
+  firstStart=firstEnd=INT64_MIN;
+  lastStart=lastEnd=INT64_MAX;
+}
+
 IntervalTree::IntervalTree()
 {
   int i;

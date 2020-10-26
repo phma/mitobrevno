@@ -43,6 +43,13 @@
  * (3,4) side -2.
  */
 
+struct IntervalRange
+{
+  int64_t firstStart,lastStart,firstEnd,lastEnd;
+  bool conjunction;
+  IntervalRange();
+};
+
 class IntervalTree
 {
 public:
