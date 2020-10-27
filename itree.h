@@ -56,6 +56,18 @@ public:
   IntervalTree();
   IntervalTree(int64_t first,int64_t last); // inclusive
   ~IntervalTree();
+  int64_t getStart()
+  {
+    return start;
+  }
+  int64_t getEnd()
+  {
+    return end;
+  }
+  int64_t getSide()
+  {
+    return side;
+  }
   int subtree(int64_t first,int64_t last);
   void insert(Interval iv);
   bool overlap(const IntervalRange &ir);
