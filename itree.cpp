@@ -22,6 +22,9 @@
 #include <cassert>
 #include "itree.h"
 
+using namespace std;
+using namespace mitobrevno;
+
 IntervalTree intervalTree;
 
 IntervalRange::IntervalRange()
@@ -146,4 +149,24 @@ bool IntervalTree::overlap(const IntervalRange &ir)
     return startOverlap && endOverlap;
   else
     return startOverlap || endOverlap;
+}
+
+vector<Interval *> IntervalTree::matchingIntervals(int eventType,const IntervalRange &ir)
+{
+  vector<Interval *> ret,part;
+  int i,j;
+  if (overlap(ir))
+    if (side)
+      for (i=0;i<4;i++)
+	if (sub[i])
+	{
+	  part=sub[i]->matchingIntervals(eventType,ir);
+	  for (j=0;j<part.size();j++)
+	    ret.push_back(part[j]);
+	}
+    else
+      for (i=0;i<leaf.size();i++)
+	if (-abs(eventType)<-32768 || eventBase(eventType)==eventBase(leaf[i].eventType))
+	  ret.push_back(&leaf[i]);
+  return ret;
 }
