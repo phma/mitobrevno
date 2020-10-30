@@ -23,6 +23,7 @@
 #include <fstream>
 #include "mitobrevno.h"
 #include "interval.h"
+#include "itree.h"
 
 using namespace std;
 using namespace mitobrevno;
@@ -50,5 +51,6 @@ int main(int argc, char *argv[])
     cout<<nEvents<<" events read\n";
   }
   treeize();
+  cout<<"Events range from "<<intervalTree.getStart()<<" to "<<intervalTree.getEnd()<<endl;
   return 0;
 }
