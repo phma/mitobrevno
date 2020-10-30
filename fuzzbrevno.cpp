@@ -32,7 +32,9 @@ int main(int argc, char *argv[])
 {
   MbHeader mbHeader;
   int nEvents=0;
-  //vector<MbEvent> events;
+  int64_t startView,endView,midView;
+  IntervalRange range;
+  vector<Interval *> inView;
   MbEvent event;
   string filename;
   if (argc>1)
@@ -52,5 +54,12 @@ int main(int argc, char *argv[])
   }
   treeize();
   cout<<"Events range from "<<intervalTree.getStart()<<" to "<<intervalTree.getEnd()<<endl;
+  midView=(intervalTree.getStart()+intervalTree.getEnd())/2;
+  startView=midView-50000000;
+  endView=midView+50000000;
+  range.firstEnd=startView;
+  range.lastStart=endView;
+  inView=intervalTree.matchingIntervals(INT_MIN,range);
+  cout<<inView.size()<<" intervals overlap middle 0.1 s\n";
   return 0;
 }
