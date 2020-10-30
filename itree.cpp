@@ -164,6 +164,8 @@ vector<Interval *> IntervalTree::matchingIntervals(int eventType,const IntervalR
 	  for (j=0;j<part.size();j++)
 	    ret.push_back(part[j]);
 	}
+	else
+	  ;
     else
       for (i=0;i<leaf.size();i++)
 	if (-abs(eventType)<-32768 || eventBase(eventType)==eventBase(leaf[i].eventType))
