@@ -40,6 +40,7 @@ vector<string> Interval::toStrings()
   int i;
   ret.push_back(to_string(start));
   ret.push_back(to_string(end));
+  ret.push_back(to_string(end-start));
   ret.push_back(to_string(eventType));
   ret.push_back(to_string(thread));
   for (i=0;i<intParams.size();i++) // TODO floats later
