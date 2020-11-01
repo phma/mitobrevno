@@ -23,6 +23,7 @@
 #include <fstream>
 #include <iomanip>
 #include <map>
+#include <algorithm>
 #include "mitobrevno.h"
 #include "interval.h"
 #include "itree.h"
@@ -55,6 +56,11 @@ void outputAligned(vector<Interval *> intervals)
   }
 }
 
+bool midBefore(Interval *a,Interval *b)
+{
+  return a->start+a->end<b->start+b->end;
+}
+
 int main(int argc, char *argv[])
 {
   MbHeader mbHeader;
@@ -83,6 +89,7 @@ int main(int argc, char *argv[])
   cout<<"Events range from "<<intervalTree.getStart()<<" to "<<intervalTree.getEnd()<<endl;
   inView=intervalTree.matchingIntervals(8194,range);
   cout<<inView.size()<<" intervals are block writes\n";
+  sort(inView.begin(),inView.end(),midBefore);
   //outputAligned(inView);
   midView=(intervalTree.getStart()+intervalTree.getEnd())/2;
   startView=midView-500000000;
@@ -91,6 +98,7 @@ int main(int argc, char *argv[])
   range.lastStart=endView;
   inView=intervalTree.matchingIntervals(INT_MIN,range);
   cout<<inView.size()<<" intervals overlap middle 1 s\n";
+  sort(inView.begin(),inView.end(),midBefore);
   outputAligned(inView);
   return 0;
 }
