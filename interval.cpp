@@ -34,6 +34,19 @@ using namespace mitobrevno;
 vector<MbEvent> pending;
 vector<Interval> intervals;
 
+vector<string> Interval::toStrings()
+{
+  vector<string> ret;
+  int i;
+  ret.push_back(to_string(start));
+  ret.push_back(to_string(end));
+  ret.push_back(to_string(eventType));
+  ret.push_back(to_string(thread));
+  for (i=0;i<intParams.size();i++) // TODO floats later
+    ret.push_back(to_string(intParams[i]));
+  return ret;
+}
+
 void storeInterval(Interval &iv)
 { // stub
   intervals.push_back(iv);

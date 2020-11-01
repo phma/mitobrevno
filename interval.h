@@ -31,6 +31,7 @@ struct Interval
   int eventType;
   std::vector<int> intParams;
   std::vector<float> floatParams;
+  std::vector<std::string> toStrings();
 };
 
 void intervalize(MbEvent &event,uint64_t startTime);
