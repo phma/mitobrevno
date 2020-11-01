@@ -81,6 +81,9 @@ int main(int argc, char *argv[])
   }
   treeize();
   cout<<"Events range from "<<intervalTree.getStart()<<" to "<<intervalTree.getEnd()<<endl;
+  inView=intervalTree.matchingIntervals(8194,range);
+  cout<<inView.size()<<" intervals are block writes\n";
+  outputAligned(inView);
   midView=(intervalTree.getStart()+intervalTree.getEnd())/2;
   startView=midView-50000000;
   endView=midView+50000000;
@@ -88,6 +91,6 @@ int main(int argc, char *argv[])
   range.lastStart=endView;
   inView=intervalTree.matchingIntervals(INT_MIN,range);
   cout<<inView.size()<<" intervals overlap middle 0.1 s\n";
-  outputAligned(inView);
+  //outputAligned(inView);
   return 0;
 }
