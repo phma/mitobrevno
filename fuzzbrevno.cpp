@@ -21,12 +21,39 @@
 
 #include <iostream>
 #include <fstream>
+#include <iomanip>
+#include <map>
 #include "mitobrevno.h"
 #include "interval.h"
 #include "itree.h"
 
 using namespace std;
 using namespace mitobrevno;
+
+void outputAligned(vector<Interval *> intervals)
+{
+  int i,j;
+  map<int,int> maxWidths;
+  vector<string> repre;
+  for (i=0;i<intervals.size();i++)
+  {
+    repre=intervals[i]->toStrings();
+    for (j=0;j<repre.size();j++)
+      if (repre[j].length()>maxWidths[j])
+	maxWidths[j]=repre[j].length();
+  }
+  for (i=0;i<intervals.size();i++)
+  {
+    repre=intervals[i]->toStrings();
+    for (j=0;j<repre.size();j++)
+    {
+      if (j)
+	cout<<' ';
+      cout<<setw(maxWidths[j])<<repre[j];
+    }
+    cout<<endl;
+  }
+}
 
 int main(int argc, char *argv[])
 {
@@ -61,5 +88,6 @@ int main(int argc, char *argv[])
   range.lastStart=endView;
   inView=intervalTree.matchingIntervals(INT_MIN,range);
   cout<<inView.size()<<" intervals overlap middle 0.1 s\n";
+  outputAligned(inView);
   return 0;
 }
