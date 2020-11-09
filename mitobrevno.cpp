@@ -349,3 +349,8 @@ MbEvent mitobrevno::readEvent()
     ret.time=0;
   return ret;
 }
+
+string mitobrevno::getEventDescription(int eventType)
+{
+  return eventDescriptions[eventType];
+}

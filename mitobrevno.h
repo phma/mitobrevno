@@ -74,6 +74,7 @@ namespace mitobrevno
   int eventBase(int eventType);
   MbHeader openLogFileRead(std::string fileName);
   MbEvent readEvent();
+  std::string getEventDescription(int eventType);
 }
 
 #endif
