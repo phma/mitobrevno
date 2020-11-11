@@ -56,6 +56,39 @@ void outputAligned(vector<Interval *> intervals)
   }
 }
 
+void findWriteRead()
+/* Finds overlapping writes and reads of the same block, and inserts
+ * error events. This is specific to Wolkenbase.
+ */
+{
+  IntervalRange all,thisWrite;
+  int i,j,n=0;
+  char baton[]="-/|\\";
+  vector<Interval> errors;
+  vector<Interval *> allWrites,lapReads;
+  Interval error1;
+  allWrites=intervalTree.matchingIntervals(8194,all);
+  for (i=0;i<allWrites.size();i++)
+  {
+    thisWrite.firstEnd=allWrites[i]->start;
+    thisWrite.lastStart=allWrites[i]->end;
+    lapReads=intervalTree.matchingIntervals(8193,thisWrite);
+    if (i%233==0)
+    {
+      cout<<i<<'\r';
+      cout.flush();
+    }
+    for (j=0;j<lapReads.size();j++)
+      if (allWrites[i]->intParams[1]==lapReads[j]->intParams[1])
+      {
+	n++;
+	//cout<<baton[n&3]<<'\b';
+	//cout.flush();
+      }
+  }
+  cout<<'\n'<<n<<" read/write contentions\n";
+}
+
 bool midBefore(Interval *a,Interval *b)
 {
   return a->start+a->end<b->start+b->end;
@@ -91,6 +124,7 @@ int main(int argc, char *argv[])
   cout<<inView.size()<<" intervals are block writes\n";
   sort(inView.begin(),inView.end(),midBefore);
   //outputAligned(inView);
+  findWriteRead();
   midView=(intervalTree.getStart()+intervalTree.getEnd())/2;
   startView=midView-500000000;
   endView=midView+500000000;
